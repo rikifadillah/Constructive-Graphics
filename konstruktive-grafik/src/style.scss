@@ -1,0 +1,238 @@
+/**
+ * Mixins
+ */
+@mixin pos ($position, $top: auto, $right: auto, $bottom: auto, $left: auto) {
+  position: $position;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+@mixin center($width: null, $height: null) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  @if not $width and not $height {
+    transform: translate(-50%, -50%);
+  } @else if $width and $height {
+    width: $width;
+    height: $height;
+    margin: -($width / 2) #{0 0} -($height / 2)
+  } @else if not $height {
+    margin-left: -($width / 2);
+    transform: translateY(-50%);
+    width: $width;
+  } @else {
+    margin-top: -($height / 2);
+    transform: translateX(-50%);
+    height: $height;
+  }
+}
+
+
+/**
+ * Variables
+ */
+$primary-color: #E3C205;
+$timing: cubic-bezier(0.455,  0.030, 0.515, 0.955);
+$duration: 1s;
+
+
+/**
+ * Animations
+ */
+@keyframes dash {
+    0% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: 3000;
+    }
+}
+
+
+/**
+ * Base
+ */
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue","Helvetica", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+}
+
+
+/**
+ * Gallery
+ */
+.gallery {
+  @include pos(absolute, 0, 0, 0, 0);
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  opacity: 1;
+  transition: $duration opacity $timing;
+  background: $primary-color;
+	background: radial-gradient(ellipse at center, lighten($primary-color, 5%) 0%, $primary-color 100%);
+
+  &.fadeOut {
+    opacity: 0;
+  }
+}
+
+.gallery__body {
+  @include center();
+  transform-origin: center center;
+}
+
+
+/**
+ * Poster
+ */
+.poster {
+  @include center();
+  transform-origin: center center;
+  display: inline-block;
+  vertical-align: middle;
+
+  &:before,
+  &:after {
+    z-index: -1;
+    position: absolute;
+    content: "";
+    bottom: 15px;
+    left: 8px;
+    width: 50%;
+    top: 80%;
+    max-width: 300px;
+    background: #777;
+    box-shadow: 0 15px 10px rgba(#000,.5);
+    transform: rotate(-3deg);
+  }
+
+  &:after {
+    transform: rotate(3deg);
+    right: 8px;
+    left: auto;
+  }
+}
+
+.poster__content {
+  position: relative;
+  width: 500px;
+  height: 700px;
+  overflow: hidden;
+	padding: 0 1em;
+  background-color: $primary-color;
+  color: black;
+  box-shadow: 0 1px 4px 2px rgba(#000,.2);
+}
+
+.poster__header {
+    width: 75%;
+    float: left;
+    margin-top: 40%;
+    overflow: hidden;
+}
+
+.poster__header-title {
+    margin-bottom: .3em;
+    font-size: 30px;
+}
+
+.poster__header-subtitle {
+    width: 35%;
+    float: left;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.poster__header-meta {
+    position: relative;
+    top: 0.2em;
+    width: 65%;
+    float: right;
+    font-size: 6px;
+    line-height: 1.5;
+    font-weight: bold;
+
+    li:last-child {
+        margin-top: 4px;
+    }
+}
+
+.poster__body {
+    position: relative;
+    top: 8px;
+    width: 25%;
+    float: right;
+    margin-top: 40%;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+
+    li:nth-child(3n) {
+        margin-top: 4px;
+    }
+}
+
+.poster__footer {
+    @include pos(absolute, 45%, auto, auto, 73.5%);
+    font-size: 3px;
+}
+
+.poster__rules {
+    @include pos(absolute, 0, 0, 0, 0);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    div {
+        position: absolute;
+    }
+}
+
+.smil .poster__rules div rect {
+    stroke-dasharray: 1000;
+    animation: dash 5s $timing infinite alternate;
+}
+
+.r-1 {
+    top: -50%;
+    left: 27.5%;
+    z-index: 2;
+}
+
+.r-2 {
+    bottom: -22%;
+    left: 27.5%;
+    z-index: 2;
+}
+
+.r-3 {
+    top: -26%;
+    left: -32%;
+    z-index: 1;
+}
+
+.r-4 {
+    bottom: -46%;
+    left: -32%;
+    z-index: 3;
+}
